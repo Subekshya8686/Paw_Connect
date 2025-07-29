@@ -36,9 +36,9 @@ const Layout = () => {
       >
         <div className="flex justify-between items-center mb-6">
           {/* <h1 className="text-2xl font-bold text-primary">FureverHome</h1> */}
-          <img src="/fureverHome_logo.png" alt="logo" className="w-16 h-auto" />
+          {/* <img src="/fureverHome_logo.png" alt="logo" className="w-16 h-auto" /> */}
           <h1 className="text-2xl font-semibold text-gray-800 ">
-            FurEver Home
+            PawConnect
           </h1>
         </div>
         <ul className="space-y-4">

@@ -2,13 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import config from "../../config/config";
 import AppBar from "../../shared/AppBar/AppBar";
 import Footer from "../../shared/Footer/Footer";
 
 const fetchPets = async () => {
-  const response = await axios.get(
-    "http://localhost:5000/api/v1/pet/getAllPets"
-  );
+  const response = await axios.get(`${config.API_BASE_URL}/pet/getAllPets`, {
+    withCredentials: true,
+  });
+
+  // const response = await axios.get("https://192.168.196.1:5443/api/v1/pet/getAllPets", {
+  //   withCredentials: true,
+  // });
   return response.data.pets;
 };
 
@@ -133,7 +138,7 @@ const Dashboard = () => {
             >
               <img
                 // src={pet.image || "/default-pet.jpg"}
-                src={`http://localhost:5000/uploads/${pet.photo}`}
+                src={`${config.UPLOAD_BASE_URL}/${pet.photo}`}
                 alt={pet.name}
                 className="w-full h-56 object-cover rounded-t-lg"
               />

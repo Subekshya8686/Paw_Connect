@@ -12,7 +12,7 @@ export default defineConfig({
       cert: fs.readFileSync(path.resolve(__dirname, 'server/ssl/cert.pem')),
     },
     port: 5173,
-    host: 'localhost'
+    host: true
   },
   preview: {
     https: {
@@ -20,6 +20,6 @@ export default defineConfig({
       cert: fs.readFileSync(path.resolve(__dirname, 'server/ssl/cert.pem')),
     },
     port: 4173,
-    host: 'localhost'
+    host: true
   }
 })

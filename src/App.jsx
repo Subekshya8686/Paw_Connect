@@ -10,7 +10,7 @@ import Layout from "./core/private/layout";
 import AdminDashboard from "./core/private/pets/AdminDashboard";
 import AdminProfile from "./core/private/user/UserProfile";
 import UsersTable from "./core/private/user/UsersTable";
-import Dashboard from "./core/public/dashboard";
+import Dashboard from "./core/public/Dashboard";
 import PetAdoptionForm from "./core/public/PetAdoptionForm";
 import FosterApplicationForm from "./core/public/PetFosterForm";
 import PetProfile from "./core/public/PetProfile";

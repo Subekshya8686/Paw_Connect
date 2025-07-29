@@ -2,11 +2,11 @@
 const config = {
   // API Configuration
   API_BASE_URL:
-    import.meta.env.VITE_API_BASE_URL || "https://localhost:5443/api/v1",
+    import.meta.env.API_BASE_URL || "https://192.168.196.1:5443/api/v1",
 
   // File upload configuration
   UPLOAD_BASE_URL:
-    import.meta.env.VITE_UPLOAD_BASE_URL || "https://localhost:5443/uploads",
+    import.meta.env.UPLOAD_BASE_URL || "http://192.168.196.1:5000/uploads",
 
   // Authentication
   TOKEN_KEY: "authToken",

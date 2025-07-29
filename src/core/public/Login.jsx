@@ -1,16 +1,17 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import config from "../../config/config";
 import ForgotPassword from "../../shared/ChangePassword/ForgetPassword";
 
 // Function for handling the login API request
 const login = async (email, password) => {
   try {
-    const response = await axios.post(
-      "http://localhost:5000/api/v1/user/login",
-      { email, password }
-    );
+    const response = await axios.post(`${config.API_BASE_URL}/user/login`, {
+      email,
+      password,
+    });
 
     console.log("Login response:", response.data);
     if (response.data.success === true) {

@@ -3,14 +3,12 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import config from "../../config/config";
 import LoginModal from "./Login";
 
 // Define the mutation function
 const registerUser = async (userData) => {
-  const response = await axios.post(
-    "http://localhost:5000/api/v1/user",
-    userData
-  );
+  const response = await axios.post(`${config.API_BASE_URL}/user`, userData);
   return response.data;
 };
 

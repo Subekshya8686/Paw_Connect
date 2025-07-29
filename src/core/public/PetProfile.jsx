@@ -1,15 +1,13 @@
 import { BookmarkIcon } from "@heroicons/react/24/solid";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppBar from "../../shared/AppBar/AppBar";
 import Footer from "../../shared/Footer/Footer";
 
 const fetchPets = async () => {
-  const response = await axios.get(
-    "http://localhost:5000/api/v1/pet/getAllPets"
-  );
+  const response = await axios.get(`${config.API_BASE_URL}/pet/getAllPets`);
   return response.data.pets;
 };
 const PetProfile = () => {
@@ -30,7 +28,7 @@ const PetProfile = () => {
     const fetchPetData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/v1/pet/get/${id}`
+          `${config.API_BASE_URL}/pet/get/${id}`
         );
         setPet(response.data);
 
@@ -56,7 +54,7 @@ const PetProfile = () => {
       const userId = localStorage.getItem("userId");
 
       const response = await axios.post(
-        `http://localhost:5000/api/v1/pet/${id}/bookmark`,
+        `${config.API_BASE_URL}/pet/${id}/bookmark`,
         {},
         {
           headers: {
@@ -95,7 +93,7 @@ const PetProfile = () => {
         <div className="bg-white shadow-md rounded-lg p-6 mx-6 lg:mx-20 flex flex-col lg:flex-row items-center justify-center gap-12 border-2">
           <div className="w-full lg:w-1/2 flex justify-center">
             <img
-              src={`http://localhost:5000/uploads/${pet?.photo}`}
+              src={`${config.UPLOAD_BASE_URL}/${pet?.photo}`}
               alt={pet.name}
               className="w-72 md:w-80 lg:w-96 h-auto rounded-xl shadow-lg border-4"
             />
@@ -209,7 +207,7 @@ const PetProfile = () => {
                   className="rounded-lg overflow-hidden shadow-sm bg-white hover:shadow-md transition-shadow duration-300 border-2 cursor-pointer"
                 >
                   <img
-                    src={`http://localhost:5000/uploads/${pet?.photo}`}
+                    src={`${config.UPLOAD_BASE_URL}/${pet?.photo}`}
                     alt={pet.name}
                     className="w-full h-56 object-cover rounded-t-lg"
                   />
