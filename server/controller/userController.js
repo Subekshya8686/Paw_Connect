@@ -144,7 +144,7 @@ const login = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, email: user.email, role: user.role }, // Payload
       SECRET_KEY,
-      { expiresIn: "6h" } // Token expiration
+      { expiresIn: "7d" } // Token expiration
     );
 
     // Return success response with the token
@@ -191,7 +191,7 @@ const forgotPassword = async (req, res) => {
     await user.save();
 
     // Create a password reset URL
-    const resetUrl = `http://localhost:5174/reset-password/${resetToken}`;
+    const resetUrl = `https://localhost:5173/reset-password/${resetToken}`;
 
     // Send email with the reset link
     const transporter = nodemailer.createTransport({

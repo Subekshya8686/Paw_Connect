@@ -1,5 +1,5 @@
-import axios from 'axios';
-import config from '../config/config.js';
+import axios from "axios";
+import config from "../config/config.js";
 
 // Create axios instance with default configuration
 const api = axios.create({
@@ -33,12 +33,12 @@ api.interceptors.response.use(
       localStorage.removeItem(config.ROLE_KEY);
       localStorage.removeItem(config.USER_ID_KEY);
       // Redirect to login or reload
-      if (window.location.pathname !== '/') {
-        window.location.href = '/';
+      if (window.location.pathname !== "/") {
+        window.location.href = "/";
       }
     }
     return Promise.reject(error);
   }
 );
 
-export default api; 
+export default api;

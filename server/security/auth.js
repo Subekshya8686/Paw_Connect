@@ -25,8 +25,6 @@ function authenticateToken(req, res, next) {
 
 function authorizeRole(role) {
   return (req, res, next) => {
-    console.log(role);
-    console.log(req.user);
     // Check if req.user exists and has the role property
     if (!req.user || !req.user.role) {
       return res.status(403).send("Access Denied: No Role Found");

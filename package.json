@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:https": "vite --https",
+    "dev:http": "vite --host localhost --port 5173",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preview:https": "vite preview --https"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

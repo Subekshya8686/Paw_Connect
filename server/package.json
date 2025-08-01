@@ -3,6 +3,7 @@
     "bcryptjs": "^2.4.3",
     "chai": "^4.5.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
     "esm": "^3.2.25",
     "express": "^4.21.1",
     "joi": "^17.13.3",
@@ -11,14 +12,17 @@
     "mongoose": "^8.8.2",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.10.0",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "selfsigned": "^3.0.1"
   },
   "name": "web-class",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "mocha --require esm tests/**/*.test.js",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "start:https": "nodemon index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",

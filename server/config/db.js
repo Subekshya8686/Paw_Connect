@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-// const mongoDBUrl =
-//   "mongodb+srv://subekshya4:Subekshya12@cluster0.lskghy8.mongodb.net/user?retryWrites=true&w=majority&appName=Cluster0";
 const mongoDBUrl = "mongodb://localhost:27017/pawconnect";
 
 const connectDB = async () => {
