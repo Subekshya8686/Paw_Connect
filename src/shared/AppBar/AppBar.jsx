@@ -59,7 +59,6 @@ const AppBar = ({
   };
 
   const handleProfileClick = () => {
-
     if (userId) {
       navigate(`/user/${userId}`);
     } else {

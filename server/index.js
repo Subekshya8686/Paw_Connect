@@ -42,8 +42,7 @@ const HTTPS_PORT = process.env.HTTPS_PORT || 5443;
 const ENABLE_HTTPS = process.env.ENABLE_HTTPS !== "false";
 
 // Start HTTP server
-app.listen(PORT, () => {
-});
+app.listen(PORT, () => {});
 
 // Start HTTPS server if enabled
 if (ENABLE_HTTPS) {
@@ -56,11 +55,9 @@ if (ENABLE_HTTPS) {
         cert: certificates.cert,
       };
 
-      https.createServer(sslOptions, app).listen(HTTPS_PORT, () => {
-      });
+      https.createServer(sslOptions, app).listen(HTTPS_PORT, () => {});
     }
-  } catch (error) {
-  }
+  } catch (error) {}
 }
 
 module.exports = app;

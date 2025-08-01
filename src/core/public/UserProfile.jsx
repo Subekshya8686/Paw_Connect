@@ -100,8 +100,6 @@ const UserProfile = () => {
     fetchBookmarkedPets();
   }, []);
 
-
-
   // Handle modal open/close
   const handleOpenEditModal = () => setOpenEditModal(true);
   const handleCloseEditModal = () => setOpenEditModal(false);
@@ -112,7 +110,6 @@ const UserProfile = () => {
   const handleCloseForgotModal = () => setOpenForgotModal(false);
 
   const [imagePreview, setImagePreview] = useState("");
-
 
   // Handle profile data change
   const handleChange = (e) => {
@@ -132,8 +129,7 @@ const UserProfile = () => {
       const response = await api.put(`/user/update/${id}`, dataToSend);
       // Close the modal or do any other necessary action after successful update
       handleCloseEditModal();
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const [image, setImage] = useState(userData.image || "/default-user.png");
@@ -169,8 +165,7 @@ const UserProfile = () => {
 
       // Update user profile after the image upload
       await updateUserProfile(data.data); // Update the profile immediately with the new image
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const updateUserProfile = async (imageUrl) => {
@@ -181,8 +176,7 @@ const UserProfile = () => {
 
     try {
       const response = await api.put(`/user/update/${id}`, updatedData);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   if (authLoading || loading)

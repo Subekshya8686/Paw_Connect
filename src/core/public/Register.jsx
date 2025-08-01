@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "./Login";
@@ -53,8 +53,7 @@ const Register = ({ onClose }) => {
     const finalPayload = { ...formData, ...finalData };
     try {
       await mutateAsync(finalPayload); // Trigger the mutation
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   const password = watch("password"); // Watch the password field to validate confirm password
