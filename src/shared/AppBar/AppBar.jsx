@@ -1,9 +1,9 @@
 import {
-    Bars3Icon,
-    UserCircleIcon,
-    XMarkIcon,
+  Bars3Icon,
+  UserCircleIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "../../core/public/Login";
 import Register from "../../core/public/register";
@@ -60,7 +60,7 @@ const AppBar = ({
 
   const handleProfileClick = () => {
     console.log("User ID from auth hook:", userId);
-    
+
     if (userId) {
       console.log("Navigating to profile");
       navigate(`/user/${userId}`);
@@ -72,7 +72,7 @@ const AppBar = ({
   };
 
   const handleLogout = () => {
-            // localStorage.removeItem(config.TOKEN_KEY); // Remove token on logout
+    // localStorage.removeItem(config.TOKEN_KEY); // Remove token on logout
     // navigate("/"); // Optionally, navigate to the homepage
     setIsDialogOpen(true);
   };
@@ -92,22 +92,29 @@ const AppBar = ({
   return (
     <div className="sticky top-0 z-10 bg-gradient-to-r from-indigo-500 to-purple-600 font-lora shadow-lg">
       <div className="flex justify-between items-center p-4 px-6 md:px-10">
-                    {/* Logo */}
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-semibold text-white ">
-                PawConnect
-              </h1>
-            </div>
+        {/* Logo */}
+        <div className="flex items-center space-x-4">
+          <h1 className="text-2xl font-semibold text-white ">PawConnect</h1>
+        </div>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-8">
-          <button className="text-white hover:text-indigo-200 transition-colors duration-200" onClick={handleHomeClick}>
+          <button
+            className="text-white hover:text-indigo-200 transition-colors duration-200"
+            onClick={handleHomeClick}
+          >
             Home
           </button>
-          <button className="text-white hover:text-indigo-200 transition-colors duration-200" onClick={handleBreedClick}>
+          <button
+            className="text-white hover:text-indigo-200 transition-colors duration-200"
+            onClick={handleBreedClick}
+          >
             Breed
           </button>
-          <button className="text-white hover:text-indigo-200 transition-colors duration-200" onClick={handleAvailableClick}>
+          <button
+            className="text-white hover:text-indigo-200 transition-colors duration-200"
+            onClick={handleAvailableClick}
+          >
             Available Pets
           </button>
         </div>
@@ -188,7 +195,7 @@ const AppBar = ({
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-                 <div className="md:hidden flex flex-col space-y-2 absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg p-2 border border-gray-200">
+        <div className="md:hidden flex flex-col space-y-2 absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg p-2 border border-gray-200">
           <button
             className="text-black "
             onClick={() => {
@@ -216,7 +223,6 @@ const AppBar = ({
           >
             Available Pets
           </button>
-        
 
           {/* Divider Line */}
           <hr className="border-gray-300" />

@@ -1,7 +1,7 @@
 import { CameraIcon } from "@heroicons/react/24/solid";
 import { Dialog, DialogContent } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import config from "../../config/config";
@@ -19,8 +19,12 @@ const fetchPets = async () => {
 const UserProfile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { isAuthenticated, userId: currentUserId, isLoading: authLoading } = useAuth();
-  
+  const {
+    isAuthenticated,
+    userId: currentUserId,
+    isLoading: authLoading,
+  } = useAuth();
+
   console.log("URL param id:", id);
   console.log("Current user id:", currentUserId);
   console.log("Is authenticated:", isAuthenticated);
@@ -33,14 +37,14 @@ const UserProfile = () => {
   // Wait for auth to load before making any decisions
   useEffect(() => {
     if (authLoading) return; // Don't do anything while auth is loading
-    
+
     if (!isAuthenticated) {
       // User is not authenticated, redirect to home
       console.log("User not authenticated, redirecting to home");
       navigate("/");
       return;
     }
-    
+
     if (id && currentUserId && id !== currentUserId) {
       // User is trying to access someone else's profile, redirect to their own
       console.log("Redirecting to own profile");
@@ -74,7 +78,7 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       // Don't fetch if auth is still loading or user is not authenticated
       if (authLoading || !isAuthenticated || !id) return;
-      
+
       try {
         console.log("Fetching user data for ID:", id);
         const response = await api.get(`/user/${id}`);
@@ -84,7 +88,9 @@ const UserProfile = () => {
         console.error("Error fetching user data:", err);
         // Don't redirect on API errors, just log them
         if (err.response?.status === 401 || err.response?.status === 403) {
-          console.log("Authorization error, user might not be allowed to view this profile");
+          console.log(
+            "Authorization error, user might not be allowed to view this profile"
+          );
         }
       } finally {
         setLoading(false);
@@ -202,9 +208,24 @@ const UserProfile = () => {
     }
   };
 
-  if (authLoading || loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  if (error) return <div className="min-h-screen flex items-center justify-center">Error: {error.message}</div>;
-  if (!isAuthenticated) return <div className="min-h-screen flex items-center justify-center">Please log in to view your profile.</div>;
+  if (authLoading || loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Error: {error.message}
+      </div>
+    );
+  if (!isAuthenticated)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Please log in to view your profile.
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 font-lora">

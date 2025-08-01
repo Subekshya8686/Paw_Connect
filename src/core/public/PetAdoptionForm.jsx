@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from "@heroicons/react/16/solid";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import config from "../../config/config";
 import AppBar from "../../shared/AppBar/AppBar";
@@ -17,8 +17,8 @@ const PetAdoptionForm = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({
     open: false,
-    message: '',
-    type: 'success'
+    message: "",
+    type: "success",
   });
 
   const [formData, setFormData] = useState({
@@ -57,8 +57,8 @@ const PetAdoptionForm = () => {
         console.error("Error fetching pet data:", error);
         setSnackbar({
           open: true,
-          message: 'Failed to load pet data. Please try again.',
-          type: 'error'
+          message: "Failed to load pet data. Please try again.",
+          type: "error",
         });
         setIsPageLoading(false);
       }
@@ -87,12 +87,12 @@ const PetAdoptionForm = () => {
         petId: id,
       });
       setIsLoading(false);
-      
+
       // Show success message
       setSnackbar({
         open: true,
-        message: 'Adoption application submitted successfully!',
-        type: 'success'
+        message: "Adoption application submitted successfully!",
+        type: "success",
       });
 
       // Redirect to pet details page after successful submission
@@ -102,11 +102,13 @@ const PetAdoptionForm = () => {
     } catch (error) {
       console.error("Error submitting application:", error);
       setIsLoading(false);
-      
+
       setSnackbar({
         open: true,
-        message: error.response?.data?.message || 'Failed to submit application. Please try again.',
-        type: 'error'
+        message:
+          error.response?.data?.message ||
+          "Failed to submit application. Please try again.",
+        type: "error",
       });
     }
   };
@@ -370,9 +372,9 @@ const PetAdoptionForm = () => {
                       onClick={handleSubmit}
                       disabled={isLoading}
                       className={`btn text-white w-1/3 md:col-span-2 ${
-                        isLoading 
-                          ? 'bg-gray-400 cursor-not-allowed' 
-                          : 'bg-indigo-600 hover:bg-indigo-700'
+                        isLoading
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-indigo-600 hover:bg-indigo-700"
                       }`}
                     >
                       {isLoading ? (
@@ -381,7 +383,7 @@ const PetAdoptionForm = () => {
                           Submitting...
                         </span>
                       ) : (
-                        'Submit Application'
+                        "Submit Application"
                       )}
                     </button>
                   </div>
