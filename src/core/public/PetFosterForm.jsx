@@ -51,7 +51,6 @@ const FosterApplicationForm = () => {
         setPet(response.data);
         setIsPageLoading(false);
       } catch (error) {
-        console.error("Error fetching pet data:", error);
         setSnackbar({
           open: true,
           message: "Failed to load pet data. Please try again.",
@@ -63,7 +62,6 @@ const FosterApplicationForm = () => {
 
     fetchPetData();
   }, [id]);
-  console.log("Pet data:", pet);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -124,7 +122,6 @@ const FosterApplicationForm = () => {
         navigate(`/profile/${id}`);
       }, 2000);
     } catch (error) {
-      console.error("Error submitting application:", error);
       setIsLoading(false);
 
       setSnackbar({

@@ -16,8 +16,6 @@ function generateSSLCertificates() {
   const keyPath = path.join(sslDir, "key.pem");
   const certPath = path.join(sslDir, "cert.pem");
 
-  console.log("🔧 Generating new SSL certificates...");
-
   // Generate certificates using Node.js crypto (alternative to OpenSSL)
   try {
     const selfsigned = require("selfsigned");
@@ -40,11 +38,8 @@ function generateSSLCertificates() {
     fs.writeFileSync(keyPath, pems.private);
     fs.writeFileSync(certPath, pems.cert);
 
-    console.log("✅ SSL certificates generated successfully");
     return { key: pems.private, cert: pems.cert };
   } catch (error) {
-    console.error("❌ Failed to generate SSL certificates:", error.message);
-    console.log("📝 Install selfsigned package: npm install selfsigned");
     return null;
   }
 }

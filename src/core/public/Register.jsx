@@ -32,11 +32,9 @@ const Register = ({ onClose }) => {
     mutationFn: registerUser,
     onSuccess: (data) => {
       alert("User registered successfully!");
-      // console.log(data);
       setIsLoginOpen(true);
     },
     onError: (err) => {
-      console.error(err);
       alert("Error registering user.");
     },
   });
@@ -53,11 +51,9 @@ const Register = ({ onClose }) => {
   const onSubmit = async (data) => {
     const { confirmPassword, ...finalData } = data; // Exclude confirmPassword
     const finalPayload = { ...formData, ...finalData };
-    console.log("Form submitted:", finalPayload); // Role will be included here
     try {
       await mutateAsync(finalPayload); // Trigger the mutation
     } catch (err) {
-      console.error("Error during mutation:", err);
     }
   };
 

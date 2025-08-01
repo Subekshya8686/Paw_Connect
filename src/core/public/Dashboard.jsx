@@ -18,7 +18,6 @@ const Dashboard = () => {
     isLoading,
     error,
   } = useQuery({ queryKey: ["pets"], queryFn: fetchPets });
-  console.log(pets);
   const navigate = useNavigate();
 
   // Update petBreeds to hold both image source and breed name

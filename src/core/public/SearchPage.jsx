@@ -64,7 +64,7 @@ const SearchPage = () => {
         setPets(data.pets);
         setTotalPages(data.totalPages);
       } catch (error) {
-        console.error("Error fetching pets:", error);
+        // Error fetching pets
       }
     };
 

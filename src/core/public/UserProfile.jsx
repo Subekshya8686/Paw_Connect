@@ -25,11 +25,6 @@ const UserProfile = () => {
     isLoading: authLoading,
   } = useAuth();
 
-  console.log("URL param id:", id);
-  console.log("Current user id:", currentUserId);
-  console.log("Is authenticated:", isAuthenticated);
-  console.log("Auth loading:", authLoading);
-
   const [bookmarkedPets, setBookmarkedPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
@@ -40,14 +35,12 @@ const UserProfile = () => {
 
     if (!isAuthenticated) {
       // User is not authenticated, redirect to home
-      console.log("User not authenticated, redirecting to home");
       navigate("/");
       return;
     }
 
     if (id && currentUserId && id !== currentUserId) {
       // User is trying to access someone else's profile, redirect to their own
-      console.log("Redirecting to own profile");
       navigate(`/user/${currentUserId}`);
       return;
     }
@@ -80,17 +73,11 @@ const UserProfile = () => {
       if (authLoading || !isAuthenticated || !id) return;
 
       try {
-        console.log("Fetching user data for ID:", id);
         const response = await api.get(`/user/${id}`);
-        console.log("User data fetched successfully:", response.data);
         setUserData(response.data);
       } catch (err) {
-        console.error("Error fetching user data:", err);
         // Don't redirect on API errors, just log them
         if (err.response?.status === 401 || err.response?.status === 403) {
-          console.log(
-            "Authorization error, user might not be allowed to view this profile"
-          );
         }
       } finally {
         setLoading(false);
@@ -106,7 +93,6 @@ const UserProfile = () => {
         const response = await api.get("/pet/bookmarked");
         setBookmarkedPets(response.data.pets);
       } catch (error) {
-        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -114,7 +100,7 @@ const UserProfile = () => {
     fetchBookmarkedPets();
   }, []);
 
-  // console.log(userData);
+
 
   // Handle modal open/close
   const handleOpenEditModal = () => setOpenEditModal(true);
@@ -126,7 +112,7 @@ const UserProfile = () => {
   const handleCloseForgotModal = () => setOpenForgotModal(false);
 
   const [imagePreview, setImagePreview] = useState("");
-  console.log("Image preview:", imagePreview);
+
 
   // Handle profile data change
   const handleChange = (e) => {
@@ -138,19 +124,15 @@ const UserProfile = () => {
   };
 
   const onSubmit = async () => {
-    console.log("Updated user data", userData);
     const dataToSend = { ...userData }; // Create a copy of userData
     if (dataToSend.image === null) {
       delete dataToSend.image; // Remove the image property if it's null
     }
-    console.log("Data to send:", dataToSend);
     try {
       const response = await api.put(`/user/update/${id}`, dataToSend);
-      console.log("User updated successfully:", response.data);
       // Close the modal or do any other necessary action after successful update
       handleCloseEditModal();
     } catch (error) {
-      console.error("Error updating user:", error);
     }
   };
 
@@ -177,7 +159,6 @@ const UserProfile = () => {
       const { data } = await api.post("/user/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("Image uploaded successfully:", data.data); // Assuming response contains image URL
 
       setImagePreview(data?.data);
       // Now update user data with the uploaded image URL
@@ -189,7 +170,6 @@ const UserProfile = () => {
       // Update user profile after the image upload
       await updateUserProfile(data.data); // Update the profile immediately with the new image
     } catch (error) {
-      console.error("Error uploading image:", error.message || error);
     }
   };
 
@@ -198,13 +178,10 @@ const UserProfile = () => {
       ...userData,
       image: imageUrl, // Use the image URL directly here
     };
-    console.log("Updated user data:", updatedData);
 
     try {
       const response = await api.put(`/user/update/${id}`, updatedData);
-      console.log("User profile updated successfully:", response.data);
     } catch (error) {
-      console.error("Error updating user profile:", error.message || error);
     }
   };
 

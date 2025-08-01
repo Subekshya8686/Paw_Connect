@@ -89,8 +89,6 @@ const createUser = async (req, res) => {
       info,
     });
   } catch (error) {
-    console.error(error); // Log the error for debugging
-    console.log(res);
     res
       .status(500)
       .json({ error: "Failed to create user", details: error.message });

@@ -35,7 +35,6 @@ app.get("/", (req, res) => {
 
 app.post("/data", (req, res) => {
   res.send("Data has been added!");
-  console.log(req.body);
 });
 
 const PORT = process.env.PORT || 5000;
@@ -44,7 +43,6 @@ const ENABLE_HTTPS = process.env.ENABLE_HTTPS !== "false";
 
 // Start HTTP server
 app.listen(PORT, () => {
-  console.log(`🌐 HTTP Server is running on http://localhost:${PORT}`);
 });
 
 // Start HTTPS server if enabled
@@ -59,23 +57,10 @@ if (ENABLE_HTTPS) {
       };
 
       https.createServer(sslOptions, app).listen(HTTPS_PORT, () => {
-        console.log(
-          `🔒 HTTPS Server is running on https://localhost:${HTTPS_PORT}`
-        );
-        console.log(`🔧 Accept the self-signed certificate in your browser`);
       });
-    } else {
-      console.log(
-        `⚠️ HTTPS server not started due to certificate generation failure`
-      );
-      console.log(`📝 Running HTTP only on port ${PORT}`);
     }
   } catch (error) {
-    console.error("❌ Failed to start HTTPS server:", error.message);
-    console.log(`📝 Running HTTP only on port ${PORT}`);
   }
-} else {
-  console.log(`📝 HTTPS disabled. Running HTTP only on port ${PORT}`);
 }
 
 module.exports = app;

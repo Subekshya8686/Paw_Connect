@@ -59,14 +59,11 @@ const AppBar = ({
   };
 
   const handleProfileClick = () => {
-    console.log("User ID from auth hook:", userId);
 
     if (userId) {
-      console.log("Navigating to profile");
       navigate(`/user/${userId}`);
     } else {
       // If no user ID, user is not authenticated, show login
-      console.log("No user ID, showing login");
       setIsLoginOpen(true);
     }
   };

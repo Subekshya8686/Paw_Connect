@@ -55,7 +55,6 @@ function App() {
   ];
 
   // const router = token ? privateRoutes : publicRoutes;
-  console.log("Role:", role);
   const router = role === "Admin" ? privateRoutes : publicRoutes; // Admin-specific routes
 
   const allRoutes = [
