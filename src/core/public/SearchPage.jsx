@@ -111,15 +111,15 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-lora">
+    <div className="min-h-screen flex flex-col font-lora bg-gradient-to-br from-indigo-50 to-purple-50">
       <AppBar />
-      <h3 className="text-xl font-bold text-gray-900 px-12 pt-4 lg:mx-16">
+      <h3 className="text-xl font-bold text-indigo-900 px-12 pt-4 lg:mx-16">
         Search Results for "{query}"
       </h3>
 
       <div className="flex flex-col md:flex-row flex-grow mt-6 px-12 mb-6 lg:mx-16">
-        <div className="w-full md:w-1/4 bg-white p-6 shadow-md rounded-lg mb-6 md:mb-0">
-          <h2 className="font-bold mb-4 text-center md:text-left text-xl">
+        <div className="w-full md:w-1/4 bg-white p-6 shadow-lg rounded-lg mb-6 md:mb-0 border border-indigo-200">
+          <h2 className="font-bold mb-4 text-center md:text-left text-xl text-indigo-900">
             Filters
           </h2>
 
@@ -190,7 +190,7 @@ const SearchPage = () => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                   navigate(`/profile/${pet._id}`);
                 }}
-                className="rounded-lg overflow-hidden shadow-sm bg-white hover:shadow-md transition-shadow duration-300 border-2 cursor-pointer"
+                className="rounded-lg overflow-hidden shadow-sm bg-white hover:shadow-md transition-shadow duration-300 border-2 cursor-pointer h-96"
               >
                 <img
                   src={`http://localhost:5000/uploads/${pet.photo}`}

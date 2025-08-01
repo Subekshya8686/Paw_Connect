@@ -9,8 +9,8 @@ const Layout = () => {
 
   const isActive = (path) =>
     location.pathname === path
-      ? "bg-white text-indigo-600 font-semibold rounded-xl"
-      : "text-white hover:bg-white hover:text-indigo-600 rounded-xl transition-colors duration-200";
+      ? "bg-[#96614D] text-white font-semibold rounded-xl"
+      : "text-gray-700 hover:bg-[#d9a18d] hover:text-white rounded-xl";
 
   const handleLogout = () => {
     setIsDialogOpen(true);
@@ -32,13 +32,13 @@ const Layout = () => {
     <div className="flex h-screen font-lora">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 bg-gradient-to-b from-indigo-600 to-purple-700 p-4 w-64 sm:relative sm:block shadow-lg`}
+        className={`fixed inset-y-0 left-0 bg-[#FCE3D4] p-4 w-64 sm:relative sm:block`}
       >
         <div className="flex justify-between items-center mb-6">
-          {/* <h1 className="text-2xl font-bold text-primary">PawConnect</h1> */}
+          {/* <h1 className="text-2xl font-bold text-primary">FureverHome</h1> */}
           <img src="/fureverHome_logo.png" alt="logo" className="w-16 h-auto" />
-          <h1 className="text-2xl font-semibold text-white ">
-            PawConnect
+          <h1 className="text-2xl font-semibold text-gray-800 ">
+            FurEver Home
           </h1>
         </div>
         <ul className="space-y-4">
@@ -88,7 +88,7 @@ const Layout = () => {
         <div className="mt-auto">
           <button
             onClick={handleLogout}
-            className="block p-2 w-full text-white hover:bg-white hover:text-indigo-600 rounded-xl mt-4 transition-colors duration-200"
+            className="block p-2 w-full text-gray-700 hover:bg-[#d9a18d] hover:text-white rounded-xl mt-4"
           >
             Logout
           </button>

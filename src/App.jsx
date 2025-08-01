@@ -16,7 +16,6 @@ import FosterApplicationForm from "./core/public/PetFosterForm";
 import PetProfile from "./core/public/PetProfile";
 import SearchPage from "./core/public/SearchPage";
 import UserProfile from "./core/public/UserProfile";
-import { useAuth } from "./hooks/useAuth";
 import ForgotPassword from "./shared/ChangePassword/ForgetPassword";
 import ResetPassword from "./shared/ChangePassword/ResetPassword";
 
@@ -25,7 +24,8 @@ const queryClient = new QueryClient();
 function App() {
   // const token = false;
 
-  const { isAuthenticated, userRole, isLoading } = useAuth();
+  const token = localStorage.getItem("token"); // Assuming token is saved in localStorage
+  const role = localStorage.getItem("role"); // Get the role from localStorage
 
   const privateRoutes = [
     {
@@ -55,8 +55,8 @@ function App() {
   ];
 
   // const router = token ? privateRoutes : publicRoutes;
-  console.log("Role:", userRole);
-  const router = userRole === "Admin" ? privateRoutes : publicRoutes; // Admin-specific routes
+  console.log("Role:", role);
+  const router = role === "Admin" ? privateRoutes : publicRoutes; // Admin-specific routes
 
   const allRoutes = [
     ...router,

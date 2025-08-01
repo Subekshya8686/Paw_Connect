@@ -50,7 +50,6 @@ const PetAdoptionForm = () => {
     // Fetch pet data (this can be done using a real API call)
     const fetchPetData = async () => {
       try {
-        setIsPageLoading(true);
         const response = await api.get(`/pet/get/${id}`);
         setPet(response.data);
         setIsPageLoading(false);
@@ -58,7 +57,7 @@ const PetAdoptionForm = () => {
         console.error("Error fetching pet data:", error);
         setSnackbar({
           open: true,
-          message: 'Failed to load pet details. Please try again.',
+          message: 'Failed to load pet data. Please try again.',
           type: 'error'
         });
         setIsPageLoading(false);
@@ -67,8 +66,58 @@ const PetAdoptionForm = () => {
 
     fetchPetData();
   }, [id]);
-  //
-  // console.log("Pet data:", pet);
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleDialogConfirm = () => {
+    setIsDialogOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate(-1);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await api.post("/adopt/submit", {
+        ...formData,
+        applicantId: userId,
+        petId: id,
+      });
+      setIsLoading(false);
+      
+      // Show success message
+      setSnackbar({
+        open: true,
+        message: 'Adoption application submitted successfully!',
+        type: 'success'
+      });
+
+      // Redirect to pet details page after successful submission
+      setTimeout(() => {
+        navigate(`/profile/${id}`);
+      }, 2000);
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      setIsLoading(false);
+      
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || 'Failed to submit application. Please try again.',
+        type: 'error'
+      });
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  if (isPageLoading) {
+    return <LoadingScreen />;
+  }
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -92,72 +141,6 @@ const PetAdoptionForm = () => {
   const handleReturn = () => {
     setIsDialogOpen(true);
   };
-
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-  };
-
-  const handleDialogConfirm = () => {
-    setIsDialogOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate(-1);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-
-    if (!formData.residenceType) {
-      setSnackbar({
-        open: true,
-        message: 'Please select a residence type.',
-        type: 'warning'
-      });
-      return; // Prevent form submission
-    }
-
-    setIsLoading(true); // Set loading to true while submitting the form
-
-    try {
-      // Post request to submit the adoption form
-      const response = await api.post("/adopt/submit", {
-        ...formData,
-        applicantId: userId, // Applicant ID from localStorage
-        petId: id, // Pet ID from URL params
-      });
-
-      console.log("Application Submitted:", response.data);
-      setIsLoading(false);
-
-      // Show success message
-      setSnackbar({
-        open: true,
-        message: 'Adoption application submitted successfully!',
-        type: 'success'
-      });
-
-      // Redirect to pet details page after successful submission
-      setTimeout(() => {
-        navigate(`/profile/${id}`);
-      }, 2000);
-    } catch (error) {
-      console.error("Error submitting application:", error);
-      setIsLoading(false); // Stop loading in case of an error
-      
-      setSnackbar({
-        open: true,
-        message: error.response?.data?.message || 'Failed to submit application. Please try again.',
-        type: 'error'
-      });
-    }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
-  if (isPageLoading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <div className="min-h-screen bg-gray-100 font-lora">
@@ -382,21 +365,25 @@ const PetAdoptionForm = () => {
                     >
                       Back
                     </button>
-                                      <button
-                    type="submit"
-                    onClick={handleSubmit}
-                    disabled={isLoading}
-                    className="btn bg-[#6AA693] text-white w-1/3 md:col-span-2 disabled:opacity-50"
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Submitting...
-                      </div>
-                    ) : (
-                      'Submit Application'
-                    )}
-                  </button>
+                    <button
+                      type="submit"
+                      onClick={handleSubmit}
+                      disabled={isLoading}
+                      className={`btn text-white w-1/3 md:col-span-2 ${
+                        isLoading 
+                          ? 'bg-gray-400 cursor-not-allowed' 
+                          : 'bg-indigo-600 hover:bg-indigo-700'
+                      }`}
+                    >
+                      {isLoading ? (
+                        <span className="flex items-center">
+                          <span className="loading loading-spinner loading-sm mr-2"></span>
+                          Submitting...
+                        </span>
+                      ) : (
+                        'Submit Application'
+                      )}
+                    </button>
                   </div>
                 </form>
               </>
@@ -414,7 +401,7 @@ const PetAdoptionForm = () => {
               <div className="flex flex-col items-center">
                 {/* Display pet image */}
                 <img
-                  src={`${config.UPLOAD_BASE_URL}/${pet?.photo}`} // Ensure the image URL is correct
+                  src={`${config.UPLOAD_BASE_URL}/${pet?.photo}`}
                   alt={pet?.name || "Pet Image"}
                   className="w-32 h-32 rounded-lg object-cover"
                 />

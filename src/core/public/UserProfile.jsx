@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import config from "../../config/config";
+import { useAuth } from "../../hooks/useAuth";
 import AppBar from "../../shared/AppBar/AppBar";
 import ForgotPassword from "../../shared/ChangePassword/ForgetPassword";
 import Footer from "../../shared/Footer/Footer";
@@ -18,13 +19,37 @@ const fetchPets = async () => {
 const UserProfile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  console.log(id);
+  const { isAuthenticated, userId: currentUserId, isLoading: authLoading } = useAuth();
+  
+  console.log("URL param id:", id);
+  console.log("Current user id:", currentUserId);
+  console.log("Is authenticated:", isAuthenticated);
+  console.log("Auth loading:", authLoading);
 
   const [bookmarkedPets, setBookmarkedPets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState({});
+
+  // Wait for auth to load before making any decisions
+  useEffect(() => {
+    if (authLoading) return; // Don't do anything while auth is loading
+    
+    if (!isAuthenticated) {
+      // User is not authenticated, redirect to home
+      console.log("User not authenticated, redirecting to home");
+      navigate("/");
+      return;
+    }
+    
+    if (id && currentUserId && id !== currentUserId) {
+      // User is trying to access someone else's profile, redirect to their own
+      console.log("Redirecting to own profile");
+      navigate(`/user/${currentUserId}`);
+      return;
+    }
+  }, [authLoading, isAuthenticated, id, currentUserId, navigate]);
 
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [userData, setUserData] = useState({});
 
   const {
     register,
@@ -47,18 +72,27 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      // Don't fetch if auth is still loading or user is not authenticated
+      if (authLoading || !isAuthenticated || !id) return;
+      
       try {
+        console.log("Fetching user data for ID:", id);
         const response = await api.get(`/user/${id}`);
+        console.log("User data fetched successfully:", response.data);
         setUserData(response.data);
       } catch (err) {
-        setError("Failed to fetch user data");
+        console.error("Error fetching user data:", err);
+        // Don't redirect on API errors, just log them
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          console.log("Authorization error, user might not be allowed to view this profile");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [id]);
+  }, [id, authLoading, isAuthenticated]);
 
   useEffect(() => {
     const fetchBookmarkedPets = async () => {
@@ -168,15 +202,15 @@ const UserProfile = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  // if (!data) return <div>No Data Available</div>;
+  if (authLoading || loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center">Error: {error.message}</div>;
+  if (!isAuthenticated) return <div className="min-h-screen flex items-center justify-center">Please log in to view your profile.</div>;
 
   return (
-    <div className="min-h-screen bg-white font-lora">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 font-lora">
       <AppBar />
       <div className="flex flex-col mx-8 my-6">
-        <div className="bg-white shadow-md rounded-lg p-6 mx-6 md:mx-12 lg:mx-20 flex flex-col lg:flex-row items-center justify-center gap-12 my-4 border-2">
+        <div className="bg-white shadow-lg rounded-lg p-6 mx-6 md:mx-12 lg:mx-20 flex flex-col lg:flex-row items-center justify-center gap-12 my-4 border border-indigo-200">
           {/* <div className="w-full lg:w-1/2 flex justify-center">
             <img
               src={image}
@@ -200,7 +234,7 @@ const UserProfile = () => {
             />
             <label
               htmlFor="user-image"
-              className="cursor-pointer w-48 h-48 border-2 border-gray-300 rounded-md flex items-center justify-center"
+              className="cursor-pointer w-48 h-48 border-2 border-indigo-300 rounded-md flex items-center justify-center hover:border-indigo-400 transition-colors"
             >
               {imagePreview ? (
                 <img
@@ -209,18 +243,18 @@ const UserProfile = () => {
                   className="w-full h-full object-cover rounded-md shadow-md"
                 />
               ) : (
-                <CameraIcon className="w-12 h-12 text-gray-400" />
+                <CameraIcon className="w-12 h-12 text-indigo-400" />
               )}
             </label>
           </div>
 
           <div className="w-full lg:w-1/2 text-center lg:text-left">
-            <h2 className="text-4xl font-bold text-gray-900 mb-3">
+            <h2 className="text-4xl font-bold text-indigo-900 mb-3">
               {userData.name}
             </h2>
-            <p className="text-xl text-gray-700 mb-4">{userData.email}</p>
-            <p className="text-lg text-gray-600 mb-4">{userData.phone}</p>
-            <p className="text-lg text-gray-600 mb-4">{userData.address}</p>
+            <p className="text-xl text-indigo-700 mb-4">{userData.email}</p>
+            <p className="text-lg text-indigo-600 mb-4">{userData.phone}</p>
+            <p className="text-lg text-indigo-600 mb-4">{userData.address}</p>
             <div className="flex items-center justify-center lg:justify-start gap-4">
               <button
                 onClick={handleOpenEditModal}
@@ -230,7 +264,7 @@ const UserProfile = () => {
               </button>
               <button
                 onClick={handleOpenForgotModal}
-                className="bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-all duration-300 shadow-md"
+                className="bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-md"
               >
                 Change Password
               </button>
@@ -240,12 +274,12 @@ const UserProfile = () => {
 
         {/* Bookmarked pets section */}
         {bookmarkedPets && bookmarkedPets.length > 0 && (
-          <div className="flex justify-center flex-col py-6 lg:mx-20 md:mx-12">
-            <h3 className="text-xl font-bold text-center mb-6 text-gray-900 font-poppins">
+          <div className="flex justify-center flex-col py-6 lg:mx-20 md:mx-12 bg-white rounded-lg shadow-md mb-6">
+            <h3 className="text-xl font-bold text-center mb-6 text-indigo-900 font-poppins">
               Bookmarked Pets
             </h3>
             {bookmarkedPets && bookmarkedPets.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-6">
                 {bookmarkedPets?.map((pet) => (
                   <div
                     key={pet._id}
@@ -253,7 +287,7 @@ const UserProfile = () => {
                       window.scrollTo({ top: 0, behavior: "smooth" });
                       navigate(`/profile/${pet._id}`);
                     }}
-                    className="rounded-lg overflow-hidden shadow-sm bg-white hover:shadow-md transition-shadow duration-300 border-2 cursor-pointer"
+                    className="rounded-lg overflow-hidden shadow-lg bg-white hover:shadow-xl transition-all duration-300 border border-indigo-200 cursor-pointer hover:scale-105"
                   >
                     <img
                       src={`${config.UPLOAD_BASE_URL}/${pet?.photo}`}
@@ -261,12 +295,12 @@ const UserProfile = () => {
                       className="w-full h-56 object-cover rounded-t-lg"
                     />
                     <div className="p-4 sm:p-6 text-center relative">
-                      <h4 className="text-lg sm:text-xl font-semibold text-gray-800 font-poppins mb-2">
+                      <h4 className="text-lg sm:text-xl font-semibold text-indigo-800 font-poppins mb-2">
                         {pet.name}
                       </h4>
                       <a
                         href="#"
-                        className="text-gray-500 hover:text-gray-600 text-sm absolute bottom-2 right-4 sm:bottom-4 sm:right-6"
+                        className="text-indigo-500 hover:text-indigo-600 text-sm absolute bottom-2 right-4 sm:bottom-4 sm:right-6"
                       >
                         View More
                       </a>
@@ -275,7 +309,7 @@ const UserProfile = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-center text-gray-600">
+              <p className="text-center text-indigo-700">
                 No bookmarked pets found.
               </p>
             )}
@@ -283,11 +317,11 @@ const UserProfile = () => {
         )}
 
         {/* Pets available for adoption */}
-        <div className="flex justify-center flex-col py-6 lg:mx-20 md:mx-12">
-          <h3 className="text-xl font-bold text-center mb-6 text-gray-900 font-poppins">
+        <div className="flex justify-center flex-col py-6 lg:mx-20 md:mx-12 bg-white rounded-lg shadow-md">
+          <h3 className="text-xl font-bold text-center mb-6 text-indigo-900 font-poppins">
             Pets Available For Adoption
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-6">
             {pets.map((pet) => (
               <div
                 key={pet.id}
@@ -295,7 +329,7 @@ const UserProfile = () => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                   navigate(`/profile/${pet._id}`);
                 }}
-                className="rounded-lg overflow-hidden shadow-sm bg-white hover:shadow-md transition-shadow duration-300 border-2 cursor-pointer"
+                className="rounded-lg overflow-hidden shadow-lg bg-white hover:shadow-xl transition-all duration-300 border border-indigo-200 cursor-pointer hover:scale-105"
               >
                 <img
                   src={`${config.UPLOAD_BASE_URL}/${pet?.photo}`}
@@ -303,12 +337,12 @@ const UserProfile = () => {
                   className="w-full h-56 object-cover rounded-t-lg"
                 />
                 <div className="p-4 sm:p-6 text-center relative">
-                  <h4 className="text-lg sm:text-xl font-semibold text-gray-800 font-poppins mb-2">
+                  <h4 className="text-lg sm:text-xl font-semibold text-indigo-800 font-poppins mb-2">
                     {pet.name}
                   </h4>
                   <a
                     href="#"
-                    className="text-gray-500 hover:text-gray-600 text-sm absolute bottom-2 right-4 sm:bottom-4 sm:right-6"
+                    className="text-indigo-500 hover:text-indigo-600 text-sm absolute bottom-2 right-4 sm:bottom-4 sm:right-6"
                   >
                     View More
                   </a>

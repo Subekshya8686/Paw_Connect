@@ -1,13 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import api from "../../utils/api";
 import LoginModal from "./Login";
 
 // Define the mutation function
 const registerUser = async (userData) => {
-  const response = await api.post("/user", userData);
+  const response = await axios.post(
+    "http://localhost:5000/api/v1/user",
+    userData
+  );
   return response.data;
 };
 
@@ -75,7 +78,7 @@ const Register = ({ onClose }) => {
         </button>
 
         {/* Left Section: Pet Image */}
-        <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-indigo-500 to-purple-600 items-center justify-center">
+        <div className="hidden lg:flex w-1/2 bg-[#96614D] items-center justify-center">
           <div className="rounded-lg overflow-hidden">
             <img
               src="pet-image.png"
@@ -88,7 +91,7 @@ const Register = ({ onClose }) => {
         {/* Right Section: Form */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center">
           <div className="mx-5 flex justify-between px-4">
-            <h1 className="text-3xl font-bold mb-4 text-indigo-600">
+            <h1 className="text-3xl font-bold mb-4 text-[#FF8A65]">
               {step === 1 ? "Personal Information" : "Account Details"} 🐾
             </h1>
             {/* <button
@@ -116,7 +119,7 @@ const Register = ({ onClose }) => {
                     {...register("name", {
                       required: "Please enter your name.",
                     })}
-                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-[#FF8A65] transition-all duration-200"
                   />
                   {errors.name && (
                     <p className="text-red-500 text-xs mt-1">
@@ -135,7 +138,7 @@ const Register = ({ onClose }) => {
                     {...register("dateOfBirth", {
                       required: "Please enter your date of birth.",
                     })}
-                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-[#FF8A65] transition-all duration-200"
                   />
                   {errors.dateOfBirth && (
                     <p className="text-red-500 text-xs mt-1">
@@ -153,7 +156,7 @@ const Register = ({ onClose }) => {
                     {...register("address", {
                       required: "Please enter your name.",
                     })}
-                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-[#FF8A65] transition-all duration-200"
                   />
                   {errors.address && (
                     <p className="text-red-500 text-xs mt-1">
@@ -166,7 +169,7 @@ const Register = ({ onClose }) => {
                 <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="btn bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg py-2 "
+                    className="btn bg-[#66AEA6] text-white hover:bg-[#30756D] rounded-lg py-2 "
                   >
                     Next
                   </button>
@@ -190,7 +193,7 @@ const Register = ({ onClose }) => {
                         message: "Invalid email address.",
                       },
                     })}
-                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-[#FF8A65] transition-all duration-200"
                   />
                   {errors.email && (
                     <p className="text-red-500 text-xs mt-1">
@@ -212,7 +215,7 @@ const Register = ({ onClose }) => {
                         message: "Password must be at least 8 characters long.",
                       },
                     })}
-                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-[#FF8A65] transition-all duration-200"
                   />
                   {errors.password && (
                     <p className="text-red-500 text-xs mt-1">
@@ -234,7 +237,7 @@ const Register = ({ onClose }) => {
                       validate: (value) =>
                         value === password || "Passwords do not match",
                     })}
-                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                    className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-[#FF8A65] transition-all duration-200"
                   />
                   {errors.confirmPassword && (
                     <p className="text-red-500 text-xs mt-1">
@@ -247,13 +250,13 @@ const Register = ({ onClose }) => {
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="btn bg-gray-500 text-white hover:bg-gray-600 rounded-lg py-2 px-6"
+                    className="btn bg-[#C38872] text-gray-50 hover:bg-[#A2715E] rounded-lg py-2 px-6"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
-                    className="btn bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg py-2 px-6 transition-colors duration-300"
+                    className="btn bg-[#66AEA6] text-white hover:bg-[#30756D] rounded-lg py-2 px-6 transition-colors duration-300"
                   >
                     Register
                   </button>

@@ -1,21 +1,31 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
 import ForgotPassword from "../../shared/ChangePassword/ForgetPassword";
-import api from "../../utils/api";
 
+// Function for handling the login API request
 const login = async (email, password) => {
   try {
-    const response = await api.post("/user/login", { email, password });
+    const response = await axios.post(
+      "http://localhost:5000/api/v1/user/login",
+      { email, password }
+    );
+
+    console.log("Login response:", response.data);
     if (response.data.success === true) {
-      return response.data;
+      // Store the token in localStorage
+      localStorage.setItem("authToken", response.data.token);
+      localStorage.setItem("role", response.data.role);
+      localStorage.setItem("userId", response.data.userId);
+      console.log("Login successful:", response.data.role);
+      return true; // Successfully logged in
     } else {
-      return false;
+      return false; // Invalid credentials
     }
   } catch (error) {
     console.error("Login failed:", error);
-    return false;
+    return false; // Error during login process
   }
 };
 
@@ -28,29 +38,29 @@ const LoginModal = ({ onClose }) => {
   } = useForm();
 
   const navigate = useNavigate();
-  const { login: authLogin } = useAuth();
 
   const [openForgotModal, setOpenForgotModal] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const handleOpenForgotModal = () => setOpenForgotModal(true);
   const handleCloseForgotModal = () => setOpenForgotModal(false);
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-    const response = await login(email, password);
 
-    if (response) {
-      setLoginSuccess(true);
-      authLogin(response.token, response.role, response.userId);
+    const success = await login(email, password);
 
-      setTimeout(() => {
-        onClose();
-        window.location.reload();
-      }, 1500); // Delay so user sees the success message
+    if (success) {
+      console.log("Login successful");
+      onClose();
+      // Redirect to the dashboard after successful login
+      window.location.reload();
     } else {
+      console.log("Login failed");
+      // Handle invalid credentials or error
       setError("email", { message: "Invalid email or password." });
     }
+
+    console.log("Form submitted:", data);
   };
 
   return (
@@ -60,7 +70,7 @@ const LoginModal = ({ onClose }) => {
         style={{ height: "90vh" }}
       >
         {/* Left Section */}
-        <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-indigo-500 to-purple-600 items-center justify-center">
+        <div className="hidden lg:flex w-1/2 bg-[#96614D] items-center justify-center">
           <div className="rounded-lg overflow-hidden">
             <img src="pet-image.png" alt="Pets" className="w-full h-auto" />
           </div>
@@ -70,12 +80,7 @@ const LoginModal = ({ onClose }) => {
         <div className="w-full lg:w-1/2 flex flex-col justify-center">
           <div className="mx-4 mt-5 flex justify-between items-start px-4">
             <div>
-          {loginSuccess && (
-            <div className="mx-4 mb-2 text-green-600 text-sm font-medium">
-              ✅ Login successful! Redirecting...
-            </div>
-          )}
-              <h1 className="text-3xl font-bold mb-2 text-indigo-600">
+              <h1 className="text-3xl font-bold mb-2 text-[#FF8A65]">
                 Welcome Back 🐾
               </h1>
               <p className="text-sm text-gray-500">
@@ -87,6 +92,7 @@ const LoginModal = ({ onClose }) => {
               &times;
             </button>
           </div>
+
           {/* Login Form */}
           <form className="sm:p-4 mx-2" onSubmit={handleSubmit(onSubmit)}>
             {/* Email */}
@@ -98,8 +104,7 @@ const LoginModal = ({ onClose }) => {
                 type="text"
                 placeholder="Email"
                 {...register("email", { required: "Please enter your email." })}
-                className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
-                disabled={loginSuccess}
+                className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-[#FF8A65] transition-all duration-200"
               />
               {errors.email && (
                 <div className="absolute left-0 bottom-[-1.25rem] w-full text-red-500 text-xs">
@@ -119,8 +124,7 @@ const LoginModal = ({ onClose }) => {
                 {...register("password", {
                   required: "Please enter your password.",
                 })}
-                className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
-                disabled={loginSuccess}
+                className="input input-bordered w-full rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-[#FF8A65] transition-all duration-200"
               />
               {errors.password && (
                 <div className="absolute left-0 bottom-[-1.25rem] w-full text-red-500 text-xs">
@@ -132,7 +136,7 @@ const LoginModal = ({ onClose }) => {
             {/* Forgot Password */}
             <div className="text-right mb-4">
               <a
-                className="text-sm text-indigo-600 hover:underline cursor-pointer"
+                className="text-sm text-[#FF8A65] hover:underline"
                 onClick={handleOpenForgotModal}
               >
                 Forgot Password?
@@ -142,14 +146,9 @@ const LoginModal = ({ onClose }) => {
             {/* Sign In Button */}
             <button
               type="submit"
-              disabled={loginSuccess}
-              className={`btn w-full ${
-                loginSuccess
-                  ? "bg-green-500 cursor-not-allowed"
-                  : "bg-indigo-600 hover:bg-indigo-700"
-              } text-white rounded-lg py-2 transition-colors duration-300`}
+              className="btn w-full bg-[#66AEA6] text-white hover:bg-[#30756D] rounded-lg py-2 transition-colors duration-300"
             >
-              {loginSuccess ? "Success" : "Sign In"}
+              Sign In
             </button>
           </form>
 
@@ -157,7 +156,7 @@ const LoginModal = ({ onClose }) => {
           <p className="text-center mt-4 text-sm text-gray-500">
             Don’t have an account?{" "}
             <a
-              className="text-indigo-600 hover:underline cursor-pointer"
+              className="text-[#FF8A65] hover:underline"
               onClick={() => navigate("/register")}
             >
               Sign up
@@ -165,8 +164,6 @@ const LoginModal = ({ onClose }) => {
           </p>
         </div>
       </div>
-
-      {/* Forgot Password Modal */}
       {openForgotModal && (
         <ForgotPassword
           open={openForgotModal}

@@ -47,7 +47,6 @@ const FosterApplicationForm = () => {
     // Fetch pet data (this can be done using a real API call)
     const fetchPetData = async () => {
       try {
-        setIsPageLoading(true);
         const response = await api.get(`/pet/get/${id}`);
         setPet(response.data);
         setIsPageLoading(false);
@@ -55,7 +54,7 @@ const FosterApplicationForm = () => {
         console.error("Error fetching pet data:", error);
         setSnackbar({
           open: true,
-          message: 'Failed to load pet details. Please try again.',
+          message: 'Failed to load pet data. Please try again.',
           type: 'error'
         });
         setIsPageLoading(false);
@@ -419,13 +418,17 @@ const FosterApplicationForm = () => {
                       type="button"
                       onClick={handleSubmit}
                       disabled={isLoading}
-                      className="btn bg-[#6AA693] text-white w-1/3 md:col-span-2 flex disabled:opacity-50"
+                      className={`btn text-white w-1/3 md:col-span-2 flex items-center justify-center ${
+                        isLoading 
+                          ? 'bg-gray-400 cursor-not-allowed' 
+                          : 'bg-indigo-600 hover:bg-indigo-700'
+                      }`}
                     >
                       {isLoading ? (
-                        <div className="flex items-center">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        <span className="flex items-center">
+                          <span className="loading loading-spinner loading-sm mr-2"></span>
                           Submitting...
-                        </div>
+                        </span>
                       ) : (
                         'Submit Application'
                       )}
@@ -447,7 +450,7 @@ const FosterApplicationForm = () => {
               <div className="flex flex-col items-center">
                 {/* Display pet image */}
                 <img
-                  src={`${config.UPLOAD_BASE_URL}/${pet?.photo}`} // Ensure the image URL is correct
+                  src={`${config.UPLOAD_BASE_URL}/${pet?.photo}`}
                   alt={pet?.name || "Pet Image"}
                   className="w-32 h-32 rounded-lg object-cover"
                 />

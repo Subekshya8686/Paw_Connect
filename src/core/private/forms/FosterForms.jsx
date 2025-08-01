@@ -1,8 +1,7 @@
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import LoadingScreen from "../../../shared/LoadingScreen/LoadingScreen";
-import Snackbar from "../../../shared/Snackbar/Snackbar";
-import api from "../../../utils/api";
 
 const DownloadCSVButton = () => {
   const handleDownload = async () => {
@@ -55,11 +54,6 @@ const PetAdoptionForms = () => {
   const [adminStatusFilter, setAdminStatusFilter] = useState(""); // New filter state
 
   const [isLoading, setIsLoading] = useState(true);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    type: 'success'
-  });
   const [petIds, setPetIds] = useState([]);
   const [rows, setRows] = useState([]);
   console.log("Pet data:", rows);
@@ -69,7 +63,9 @@ const PetAdoptionForms = () => {
     const fetchPetData = async () => {
       try {
         setTimeout(async () => {
-          const response = await api.get("/foster/getAll");
+          const response = await axios.get(
+            `http://localhost:5000/api/v1/foster/getAll`
+          );
           setRows(response.data.data);
           const ids = response.data.data.map((pet) => pet.id); // Assuming each pet has an 'id' field
           setPetIds(ids);
@@ -77,11 +73,6 @@ const PetAdoptionForms = () => {
         }, 5000); // Simulating loading time (remove or adjust as needed)
       } catch (error) {
         console.error("Error fetching pet data:", error);
-        setSnackbar({
-          open: true,
-          message: 'Failed to load foster applications.',
-          type: 'error'
-        });
         setIsLoading(false); // Set loading to false if an error occurs
       }
     };
@@ -109,10 +100,13 @@ const PetAdoptionForms = () => {
     console.log(`Application ID: ${petId} - Action: ${adminStatus}`);
 
     try {
-      const response = await api.put(`/foster/${petId}/review`, {
-        adminId,
-        adminStatus,
-      });
+      const response = await axios.put(
+        `http://localhost:5000/api/v1/foster/${petId}/review`,
+        {
+          adminId,
+          adminStatus,
+        }
+      );
 
       // Check for successful response by status code
       if (response.status === 200) {
@@ -122,42 +116,18 @@ const PetAdoptionForms = () => {
             pet._id === petId ? { ...pet, adminStatus: adminStatus } : pet
           )
         );
-        console.log("Foster status updated successfully:", response.data);
-        
-        // Show success message
-        setSnackbar({
-          open: true,
-          message: `Foster application ${adminStatus.toLowerCase()} successfully!`,
-          type: 'success'
-        });
-        
+        console.log("Adoption status updated successfully:", response.data);
         // Reload the page to reflect the updated data
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+        window.location.reload();
       } else {
         console.error(
-          "Failed to update foster status:",
+          "Failed to update adoption status:",
           response.data.message || response.statusText
         );
-        setSnackbar({
-          open: true,
-          message: 'Failed to update application status.',
-          type: 'error'
-        });
       }
     } catch (error) {
-      console.error("Error updating foster status:", error);
-      setSnackbar({
-        open: true,
-        message: 'Failed to update application status.',
-        type: 'error'
-      });
+      console.error("Error updating adoption status:", error);
     }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -303,13 +273,6 @@ const PetAdoptionForms = () => {
           </div>
         </div>
       )}
-
-      <Snackbar
-        open={snackbar.open}
-        message={snackbar.message}
-        type={snackbar.type}
-        onClose={handleCloseSnackbar}
-      />
     </>
   );
 };

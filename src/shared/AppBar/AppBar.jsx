@@ -27,7 +27,7 @@ const AppBar = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false); // State to manage dialog visibility
   const [isLoading, setIsLoading] = useState(false); // State to manage loading state for confirm button
 
-  const { isAuthenticated, logout: authLogout } = useAuth();
+  const { isAuthenticated, userId, logout: authLogout } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -51,10 +51,6 @@ const AppBar = ({
     navigate("/");
     petsRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const handleFooterClick = () => {
-    navigate("/");
-    footerRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && searchTerm.trim()) {
@@ -63,13 +59,15 @@ const AppBar = ({
   };
 
   const handleProfileClick = () => {
-    const userId = localStorage.getItem("userId"); // Retrieve user ID from localStorage
-    console.log("User ID:", userId);
+    console.log("User ID from auth hook:", userId);
+    
     if (userId) {
-      console.log("profile");
+      console.log("Navigating to profile");
       navigate(`/user/${userId}`);
     } else {
-      navigate("/profile"); // Fallback if no ID is found
+      // If no user ID, user is not authenticated, show login
+      console.log("No user ID, showing login");
+      setIsLoginOpen(true);
     }
   };
 
@@ -111,9 +109,6 @@ const AppBar = ({
           </button>
           <button className="text-white hover:text-indigo-200 transition-colors duration-200" onClick={handleAvailableClick}>
             Available Pets
-          </button>
-          <button className="text-white hover:text-indigo-200 transition-colors duration-200" onClick={handleFooterClick}>
-            Contact
           </button>
         </div>
 
@@ -221,15 +216,7 @@ const AppBar = ({
           >
             Available Pets
           </button>
-          <button
-            className="text-black "
-            onClick={() => {
-              handleFooterClick();
-              setMobileMenuOpen(false);
-            }}
-          >
-            Contact
-          </button>
+        
 
           {/* Divider Line */}
           <hr className="border-gray-300" />

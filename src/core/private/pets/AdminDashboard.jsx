@@ -1,7 +1,7 @@
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import LoadingScreen from "../../../shared/LoadingScreen/LoadingScreen";
-import api from "../../../utils/api";
 import CreatePet from "./CreatePet";
 
 const AdminDashboard = () => {
@@ -23,11 +23,14 @@ const AdminDashboard = () => {
       try {
         // Simulate 2 seconds delay before fetching data
         setTimeout(async () => {
-          const response = await api.get("/pet/getAllPets", {
-            params: {
-              size, // Send the size (per page)
-            },
-          });
+          const response = await axios.get(
+            `http://localhost:5000/api/v1/pet/getAllPets`,
+            {
+              params: {
+                size, // Send the size (per page)
+              },
+            }
+          );
           setPet(response.data.pets);
           setRows(response.data.pets);
           setIsLoading(false); // Set isLoading to false once data is fetched

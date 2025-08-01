@@ -1,8 +1,7 @@
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import LoadingScreen from "../../../shared/LoadingScreen/LoadingScreen";
-import Snackbar from "../../../shared/Snackbar/Snackbar";
-import api from "../../../utils/api";
 
 const DownloadCSVButton = () => {
   const handleDownload = async () => {
@@ -54,11 +53,6 @@ const PetAdoptionForms = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [adminStatusFilter, setAdminStatusFilter] = useState(""); // New filter state
   const [isLoading, setIsLoading] = useState(true);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    type: 'success'
-  });
 
   const [petIds, setPetIds] = useState([]);
   const [rows, setRows] = useState([]);
@@ -69,7 +63,9 @@ const PetAdoptionForms = () => {
     const fetchPetData = async () => {
       try {
         setTimeout(async () => {
-          const response = await api.get("/adopt/getAll");
+          const response = await axios.get(
+            `http://localhost:5000/api/v1/adopt/getAll`
+          );
           setRows(response.data.data);
           const ids = response.data.data.map((pet) => pet.id); // Assuming each pet has an 'id' field
           setPetIds(ids);
@@ -78,12 +74,6 @@ const PetAdoptionForms = () => {
         console.log("Pet data:", response.data.data);
       } catch (error) {
         console.error("Error fetching pet data:", error);
-        setSnackbar({
-          open: true,
-          message: 'Failed to load adoption applications.',
-          type: 'error'
-        });
-        setIsLoading(false);
       }
     };
 
@@ -144,10 +134,13 @@ const PetAdoptionForms = () => {
     console.log(`Application ID: ${petId} - Action: ${adminStatus}`);
 
     try {
-      const response = await api.put(`/adopt/${petId}/review`, {
-        adminId,
-        adminStatus,
-      });
+      const response = await axios.put(
+        `http://localhost:5000/api/v1/adopt/${petId}/review`,
+        {
+          adminId,
+          adminStatus,
+        }
+      );
 
       // Check for successful response by status code
       if (response.status === 200) {
@@ -158,41 +151,17 @@ const PetAdoptionForms = () => {
           )
         );
         console.log("Adoption status updated successfully:", response.data);
-        
-        // Show success message
-        setSnackbar({
-          open: true,
-          message: `Application ${adminStatus.toLowerCase()} successfully!`,
-          type: 'success'
-        });
-        
         // Reload the page to reflect the updated data
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+        window.location.reload();
       } else {
         console.error(
           "Failed to update adoption status:",
           response.data.message || response.statusText
         );
-        setSnackbar({
-          open: true,
-          message: 'Failed to update application status.',
-          type: 'error'
-        });
       }
     } catch (error) {
       console.error("Error updating adoption status:", error);
-      setSnackbar({
-        open: true,
-        message: 'Failed to update application status.',
-        type: 'error'
-      });
     }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -325,13 +294,6 @@ const PetAdoptionForms = () => {
           </div>
         </div>
       )}
-
-      <Snackbar
-        open={snackbar.open}
-        message={snackbar.message}
-        type={snackbar.type}
-        onClose={handleCloseSnackbar}
-      />
     </>
   );
 };

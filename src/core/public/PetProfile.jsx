@@ -1,14 +1,15 @@
 import { BookmarkIcon } from "@heroicons/react/24/solid";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import config from "../../config/config";
 import AppBar from "../../shared/AppBar/AppBar";
 import Footer from "../../shared/Footer/Footer";
-import api from "../../utils/api";
 
 const fetchPets = async () => {
-  const response = await api.get("/pet/getAllPets");
+  const response = await axios.get(
+    "http://localhost:5000/api/v1/pet/getAllPets"
+  );
   return response.data.pets;
 };
 const PetProfile = () => {
@@ -28,7 +29,9 @@ const PetProfile = () => {
     // Fetch pet data (this can be done using a real API call)
     const fetchPetData = async () => {
       try {
-        const response = await api.get(`/pet/get/${id}`);
+        const response = await axios.get(
+          `http://localhost:5000/api/v1/pet/get/${id}`
+        );
         setPet(response.data);
 
         // Check if the logged-in user's ID matches any in the bookmarkedBy array
@@ -52,7 +55,15 @@ const PetProfile = () => {
       const token = localStorage.getItem("authToken"); // Example: Getting from localStorage
       const userId = localStorage.getItem("userId");
 
-      const response = await api.post(`/pet/${id}/bookmark`, {});
+      const response = await axios.post(
+        `http://localhost:5000/api/v1/pet/${id}/bookmark`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token in Authorization header
+          },
+        }
+      );
 
       if (response.data.success) {
         // Update the bookmark status based on the response
@@ -84,7 +95,7 @@ const PetProfile = () => {
         <div className="bg-white shadow-md rounded-lg p-6 mx-6 lg:mx-20 flex flex-col lg:flex-row items-center justify-center gap-12 border-2">
           <div className="w-full lg:w-1/2 flex justify-center">
             <img
-              src={`${config.UPLOAD_BASE_URL}/${pet?.photo}`}
+              src={`http://localhost:5000/uploads/${pet?.photo}`}
               alt={pet.name}
               className="w-72 md:w-80 lg:w-96 h-auto rounded-xl shadow-lg border-4"
             />
@@ -102,13 +113,13 @@ const PetProfile = () => {
             <div className="flex items-center justify-center lg:justify-start gap-4">
               <button
                 onClick={() => navigate(`/adoption/${id}`)}
-                className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-all duration-300 shadow-md"
+                className="bg-[#66AEA6] text-white px-8 py-3 rounded-lg hover:bg-[#30756D] transition-all duration-300 shadow-md"
               >
                 Adopt {pet.name}
               </button>
               <button
                 onClick={() => navigate(`/foster/${id}`)}
-                className="bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-all duration-300 shadow-md"
+                className="bg-[#96614D] text-white px-8 py-3 rounded-lg hover:bg-[#A2715E] transition-all duration-300 shadow-md"
               >
                 Foster {pet.name}
               </button>
@@ -116,7 +127,7 @@ const PetProfile = () => {
                 onClick={toggleBookmark}
                 className={`px-6 py-3 rounded-lg transition-all duration-300 shadow-md flex items-center gap-2 ${
                   isBookmarked
-                    ? "bg-indigo-100 text-indigo-600"
+                    ? "bg-[#FCDDC9] text-[#96614D]"
                     : "bg-gray-200 text-gray-600"
                 }`}
               >
